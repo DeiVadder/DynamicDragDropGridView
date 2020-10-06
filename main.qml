@@ -65,7 +65,7 @@ Window {
         onPressAndHold: currentId = myModel.get(newIndex = index).gridId
         onReleased: currentId = -1
         onPositionChanged: {
-            if (loc !== currentId && index !== -1 && index !== newIndex)
+            if (currentId !== -1 && index !== -1 && index !== newIndex)
                 myModel.move(newIndex, newIndex = index, 1)
         }
     }
