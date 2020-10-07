@@ -8,10 +8,11 @@ Window {
     height: 480
     title: qsTr("DragDropGriedView")
 
+    Component.onCompleted: populate()
 
-    Button{
-        id: addButton
-        text: qsTr("Populate")
+    Button {
+        id:buttonAdd
+        text: qsTr("Add")
 
         anchors{
             left: parent.left
@@ -19,12 +20,42 @@ Window {
             top: parent.top
         }
         height:  50
+        onClicked: replaceComponent()
+    }
+
+    Button{
+        id: buttonCreate
+        text: qsTr("Populate")
+
+        anchors{
+            left: parent.left
+            right: parent.right
+            top: buttonAdd.bottom
+            topMargin: 2
+        }
+        height:  50
 
         onClicked: populate()
     }
 
     function getRandomInt(max) {
-      return Math.floor(Math.random() * Math.floor(max));
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+
+    function replaceComponent() {
+        var c = ("#%1%2%3").arg( getRandomInt(99) ).arg(getRandomInt(99)).arg(getRandomInt(99))
+
+        for(var i = 0; i < myModel.count; i++) {
+            var isDummy = myModel.get(i).dummy;
+            if(!isDummy)
+                continue
+            var gridId = myModel.get(i).gridId
+            myModel.insert(i, {"colorProp": c, "gridId" :gridId , "dummy":false})
+            myModel.remove(i+1);
+            return
+        }
+
+        myModel.append({"colorProp": c, "gridId" :myModel.count + 1 , "dummy":false})
     }
 
     function addComponent() {
@@ -44,8 +75,8 @@ Window {
     }
 
     ListModel {
-            id: myModel
-        }
+        id: myModel
+    }
 
     GridView{
         id: grid
@@ -53,7 +84,7 @@ Window {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-            top: addButton.bottom
+            top: buttonCreate.bottom
         }
         cellWidth: 120
         cellHeight: 120
