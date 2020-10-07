@@ -11,7 +11,7 @@ Window {
 
     Button{
         id: addButton
-        text: qsTr("AddComponent")
+        text: qsTr("Populate")
 
         anchors{
             left: parent.left
@@ -20,7 +20,7 @@ Window {
         }
         height:  50
 
-        onClicked: addComponent()
+        onClicked: populate()
     }
 
     function getRandomInt(max) {
@@ -29,7 +29,18 @@ Window {
 
     function addComponent() {
         var c = ("#%1%2%3").arg( getRandomInt(99) ).arg(getRandomInt(99)).arg(getRandomInt(99))
-        myModel.append({"colorProp": c, "gridId" :myModel.count + 1 })
+        myModel.append({"colorProp": c, "gridId" :myModel.count + 1 , "dummy":false})
+    }
+
+    function populate() {
+        myModel.clear()
+        for(var i = 0; i < 30; i++) {
+            if(Math.random() > 0.5) {
+                addComponent()
+            } else {
+                myModel.append({"colorProp": "#FFFFFF", "gridId" :myModel.count + 1 , "dummy":true})
+            }
+        }
     }
 
     ListModel {
@@ -62,7 +73,10 @@ Window {
 
         id: loc
         anchors.fill: grid
-        onPressAndHold: currentId = myModel.get(newIndex = index).gridId
+        onPressAndHold:{
+            if(!myModel.get(index).dummy)
+                currentId = myModel.get(newIndex = index).gridId
+        }
         onReleased: currentId = -1
         onPositionChanged: {
             if (currentId !== -1 && index !== -1 && index !== newIndex)

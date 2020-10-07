@@ -16,7 +16,7 @@ Component {
             anchors.fill: parent;
             border.color: "#326487"; border.width: 6
             color: "transparent"; radius: 5
-            visible: item.state = "active"
+            visible: item.state = "active" && !dummy
         }
 
         Behavior on x {
@@ -46,6 +46,8 @@ Component {
         Text {
             anchors.centerIn: parent
             text: gridId
+
+            visible: !dummy
         }
 
         } //Image
